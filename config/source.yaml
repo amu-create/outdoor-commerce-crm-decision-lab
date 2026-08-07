@@ -1,0 +1,21 @@
+source: thelook
+project_id: occl-analytics-2026
+dataset: bigquery-public-data.thelook_ecommerce
+decided_at: 2026-08-07
+reason: Olist 재구매율 3.118756% 대비 theLook 37.419959%이며 원가 29120개와 유입채널 5종, 반품 주문 12470건을 제공한다.
+previous_decision: olist
+change_reason: Olist는 고객당 주문 1.034809건과 재구매 고객 2997명으로 리텐션·CRM 분석에 부적합해 패션 커머스 theLook으로 변경했다.
+as_of_date: 2026-08-07
+as_of_policy: 시간 기반 분석은 DATE(timestamp) <= as_of_date만 포함하고 전체 테이블 행수는 조회 시점 스냅샷으로 검증한다.
+future_data:
+  orders_after_as_of_date: 0
+  order_items_after_as_of_date: 1197
+  events_after_as_of_date: 1197
+tables:
+  users: 100000
+  orders: 125158
+  order_items: 181263
+  products: 29120
+  events: 2424927
+  distribution_centers: 10
+  inventory_items: 489651
