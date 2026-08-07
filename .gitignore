@@ -19,6 +19,7 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 logs/*.txt
+logs/known_issues.md
 *.csv
 !reports/preview/
 !reports/preview/*.csv
