@@ -7,6 +7,19 @@ previous_decision: olist
 change_reason: Olist는 고객당 주문 1.034809건과 재구매 고객 2997명으로 리텐션·CRM 분석에 부적합해 패션 커머스 theLook으로 변경했다.
 as_of_date: 2026-08-07
 as_of_policy: 시간 기반 분석은 DATE(timestamp) <= as_of_date만 포함하고 전체 테이블 행수는 조회 시점 스냅샷으로 검증한다.
+analysis_window:
+  start: 2023-08-01
+  end: 2026-08-07
+  calendar_cohort_months: 37
+  complete_months: 36
+  partial_months: 1
+  reason: 전체 91개월은 코호트 시각화 판독성이 낮아 최근 36개월과 2026-08 부분월 1개로 제한한다.
+  sample:
+    full_orders: 125158
+    full_customers: 80115
+    window_orders: 96277
+    window_customers: 66162
+    cohort_customers: 47928
 future_data:
   orders_after_as_of_date: 0
   order_items_after_as_of_date: 1197
