@@ -6,6 +6,9 @@ Outdoor Commerce CRM Decision Lab turns public synthetic fashion-commerce record
 
 **Target completion date: 2026-08-15**
 
+**Repository:** [github.com/amu-create/outdoor-commerce-crm-decision-lab](https://github.com/amu-create/outdoor-commerce-crm-decision-lab)
+**One-page execution plan:** [reports/plan_onepager.pdf](reports/plan_onepager.pdf)
+
 ## Current evidence
 
 ### Monthly net revenue and margin rate
@@ -17,6 +20,8 @@ The analysis window retains `96,277` orders and `66,162` customers. Net revenue 
 ### Cohort retention
 
 ![Cohort retention heatmap](reports/preview/02_cohort_retention.png)
+
+감쇠가 관측되지 않음. [데이터 한계 참조](docs/limitations.md).
 
 The cohort output contains `37` first-purchase months and `444` M+1-to-M+12 cells. `90` cells are censored and stored as NULL because their target month is not fully observed by `2026-08-07`.
 
@@ -40,7 +45,7 @@ theLook is synthetic public data, not actual company data. Campaign and treatmen
 - Discounted items are `0/180,066`, so a discount-sensitive segment cannot be measured.
 - Future order items and events are `1,197` rows each; time analysis is fixed at `as_of_date=2026-08-07`.
 
-See [Data limitations and interpretation rules](docs/limitations.md) for the 11 quantified limitations, timestamp anomalies, censoring policy, and revenue reconciliation.
+See [Data limitations and interpretation rules](docs/limitations.md) for the 12 quantified limitations, timestamp anomalies, censoring policy, and revenue reconciliation.
 
 ## Current status
 
@@ -51,7 +56,7 @@ See [Data limitations and interpretation rules](docs/limitations.md) for the 11 
 - [x] M+1-to-M+12 cohort-retention SQL, CSV, and heatmap
 - [ ] Customer segments and channel/category retention decomposition
 - [ ] Experiment design and decision dashboard
-- [ ] Reproducibility review and final one-page brief
+- [x] Reproducibility review and final one-page brief
 
 ## Reproduction
 
@@ -70,6 +75,7 @@ Their committed outputs are:
 
 - [`reports/preview/01_monthly_kpi.csv`](reports/preview/01_monthly_kpi.csv)
 - [`reports/preview/02_cohort_retention.csv`](reports/preview/02_cohort_retention.csv)
+- [`reports/plan_onepager.pdf`](reports/plan_onepager.pdf)
 
 Both queries use `2023-08-01` through `2026-08-07`, run with BigQuery Standard SQL, and were executed twice with matching SHA-256 output hashes.
 
