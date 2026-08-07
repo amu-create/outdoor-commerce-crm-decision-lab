@@ -24,6 +24,7 @@ logs/known_issues.md
 !reports/preview/
 !reports/preview/*.csv
 reports/preview/*.png
+reports/application_plan_private.pdf
 node_modules/
 tmp/
 .DS_Store

@@ -7,7 +7,7 @@ Outdoor Commerce CRM Decision Lab turns public synthetic fashion-commerce record
 **Target completion date: 2026-08-15**
 
 **Repository:** [github.com/amu-create/outdoor-commerce-crm-decision-lab](https://github.com/amu-create/outdoor-commerce-crm-decision-lab)
-**One-page execution plan:** [reports/plan_onepager.pdf](reports/plan_onepager.pdf)
+**One-page execution plan:** [reports/plan_onepager_public.pdf](reports/plan_onepager_public.pdf)
 
 ## Current evidence
 
@@ -15,7 +15,7 @@ Outdoor Commerce CRM Decision Lab turns public synthetic fashion-commerce record
 
 ![Monthly net revenue and margin rate](reports/preview/01_monthly_kpi.png)
 
-The analysis window retains `96,277` orders and `66,162` customers. Net revenue increased `30.117404%` in 2026-07, driven by a `29.552314%` increase in orders versus a `0.439306%` increase in AOV. August 2026 is marked as a partial month through August 7.
+The analysis window retains `96,277` orders and `66,162` customers. Net revenue increased `30.1%` in 2026-07, driven by a `29.6%` increase in orders versus a `0.4%` increase in AOV. August 2026 is marked as a partial month through August 7.
 
 ### Cohort retention
 
@@ -75,15 +75,24 @@ Their committed outputs are:
 
 - [`reports/preview/01_monthly_kpi.csv`](reports/preview/01_monthly_kpi.csv)
 - [`reports/preview/02_cohort_retention.csv`](reports/preview/02_cohort_retention.csv)
-- [`reports/plan_onepager.pdf`](reports/plan_onepager.pdf)
+- [`reports/plan_onepager_public.pdf`](reports/plan_onepager_public.pdf)
 
 Both queries use `2023-08-01` through `2026-08-07`, run with BigQuery Standard SQL, and were executed twice with matching SHA-256 output hashes.
 
 ## Technology stack
 
-- **BigQuery Standard SQL** for source access, KPI aggregation, and cohort retention
-- **Python** for deterministic query execution, reconciliation, and artifact verification
+### In use
+
+- **Python** for source access, deterministic execution, and artifact verification
+- **BigQuery** for the public theLook dataset and query execution
+- **SQL** for monthly KPI and cohort-retention definitions
+- **pandas** for tabular result handling and CSV export
 - **Matplotlib** for the two committed preview charts
-- **dbt, Jupyter, and Pytest** for the planned mart, exploration, and data-quality layers
+
+### Planned work
+
+- Customer segmentation and funnel analysis
+- Experiment design and predictive modeling
+- Decision dashboard and final reporting
 
 Code and documentation use the [MIT License](LICENSE). Source datasets remain subject to their providers' separate terms.
