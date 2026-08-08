@@ -1,98 +1,183 @@
 # Outdoor Commerce CRM Decision Lab
 
-![Project status: analysis in progress](https://img.shields.io/badge/status-analysis%20in%20progress-E2703A)
+![status](https://img.shields.io/badge/status-analysis%20in%20progress-E2703A)
 
-Outdoor Commerce CRM Decision Lab turns public synthetic fashion-commerce records into reproducible retention and CRM decisions. The current analysis uses BigQuery's theLook dataset and does not represent any retailer's private data or performance.
+공개 합성 패션 커머스 데이터로 매출·고객 행동·CRM 의사결정을 재현하고,
+그 숫자를 어디까지 믿을 수 있는지 함께 검증하는 분석 프로젝트입니다.
 
-**Target completion date: 2026-08-15**
+**완성 목표일: 2026-08-15**
+**수행계획서 1쪽:** [reports/plan_onepager_public.pdf](reports/plan_onepager_public.pdf)
 
-**Repository:** [github.com/amu-create/outdoor-commerce-crm-decision-lab](https://github.com/amu-create/outdoor-commerce-crm-decision-lab)
-**One-page execution plan:** [reports/plan_onepager_public.pdf](reports/plan_onepager_public.pdf)
+---
 
-## Current evidence
+## 30초 결론
 
-### Monthly net revenue and margin rate
+1. **2026년 7월 순매출은 전월 대비 30.1% 증가했고, 원인은 객단가가 아니라 주문량입니다.**
+   주문수 +29.6%, 객단가 +0.4%.
 
-![Monthly net revenue and margin rate](reports/preview/01_monthly_kpi.png)
+2. **분석 구간 유효 주문 72,268건의 매출이 품목 단위와 주문 단위에서 대사됩니다.**
+   취소·반품 제외 기준을 명시했고, 마진은 상품 원가 기준입니다.
 
-The analysis window retains `96,277` orders and `66,162` customers. Net revenue increased `30.1%` in 2026-07, driven by a `29.6%` increase in orders versus a `0.4%` increase in AOV. August 2026 is marked as a partial month through August 7.
+3. **이 데이터의 리텐션은 실제 운영 기준으로 쓸 수 없습니다.**
+   M+1부터 M+12까지 감쇠 없이 1~2%대로 평탄해, 절대값 기반 액션 타이밍은
+   산출하지 않고 코호트 간 상대 비교로만 사용했습니다.
 
-### Cohort retention
+---
 
-![Cohort retention heatmap](reports/preview/02_cohort_retention.png)
+## 검증된 분석 결과
 
-감쇠가 관측되지 않음. [데이터 한계 참조](docs/limitations.md).
+### 월별 순매출과 마진율
 
-The cohort output contains `37` first-purchase months and `444` M+1-to-M+12 cells. `90` cells are censored and stored as NULL because their target month is not fully observed by `2026-08-07`.
+![월별 순매출과 마진율](reports/preview/01_monthly_kpi.png)
 
-## Five business questions this project answers
+분석 구간은 2023-08-01부터 2026-08-07까지입니다.
+이 구간의 전체 주문은 96,277건이고, 취소·반품을 제외한 **유효 주문은 72,268건**입니다.
+차트와 CSV의 모든 지표는 유효 주문 기준이며, 두 숫자를 혼용하지 않았습니다.
 
-1. **Is monthly net-revenue growth driven by more orders or higher AOV?**
-2. **Which first-purchase cohorts return in M+1 through M+12 after incomplete observation is censored?**
-3. **How much gross revenue is removed by Cancelled and Returned orders, and what product-cost margin remains?**
-4. **Which acquisition channels and first-purchase categories are associated with stronger repeat purchasing?**
-5. **Which CRM audience should receive a campaign when repeat purchase, margin, and return rate are evaluated together?**
+2026년 8월은 7일까지만 관측된 부분월로 표시하고 완전월과 직접 비교하지 않았습니다.
 
-## Data source and disclosure
+### 코호트 리텐션
 
-The source is `bigquery-public-data.thelook_ecommerce`, queried through project-scoped Application Default Credentials. The source provides `125,158` orders, `100,000` users, product costs, return statuses, acquisition sources, and behavior events.
+![코호트 리텐션 히트맵](reports/preview/02_cohort_retention.png)
 
-theLook is synthetic public data, not actual company data. Campaign and treatment fields are absent, so this stage reports no campaign lift or causal commercial impact. Raw source files, credentials, customer names, email addresses, and addresses are not committed.
+첫 구매월 37개, M+1~M+12 셀 444개 중 90개는 대상 월이 2026-08-07 기준으로
+완전히 관측되지 않아 NULL로 저장하고 절단 표시했습니다.
 
-## Data limitations
+관측된 셀은 M+1부터 M+12까지 감쇠 없이 1~2%대로 평탄하게 유지됩니다.
+실제 커머스의 리텐션 곡선과 다르며, 가입에서 첫 구매까지 중앙값이 385일이라는
+점과 함께 **합성 데이터의 시간 분포 아티팩트**로 판단했습니다.
+따라서 절대값 기반 액션 타이밍은 산출하지 않았습니다.
+근거는 [데이터 한계 문서](docs/limitations.md)에 정리했습니다.
 
-- Signup-to-first-purchase time is distorted: P10 `28 days`, median `385 days`, and P90 `1,439 days`.
-- Discounted items are `0/180,066`, so a discount-sensitive segment cannot be measured.
-- Future order items and events are `1,197` rows each; time analysis is fixed at `as_of_date=2026-08-07`.
+---
 
-See [Data limitations and interpretation rules](docs/limitations.md) for the 12 quantified limitations, timestamp anomalies, censoring policy, and revenue reconciliation.
+## 비즈니스 질문 5개와 현재 답변 가능 범위
 
-## Current status
+1. **[답변 가능]** 월별 순매출 성장은 주문 증가와 객단가 상승 중 무엇이 이끌었는가
+2. **[답변 가능]** 관측 미완료 구간을 절단했을 때 각 첫 구매 코호트의 M+1~M+12 재구매는 어떠한가
+3. **[답변 가능]** 취소·반품이 총매출에서 제거하는 금액과 상품 원가 기준 잔여 마진은 얼마인가
+4. **[부분 가능]** 어떤 유입채널과 첫 구매 카테고리가 높은 반복구매와 함께 나타나는가
+5. **[현재 불가]** 반복구매·마진·반품률을 함께 볼 때 어떤 CRM 대상에 캠페인을 보내야 하는가
 
-- [x] Repository structure and public-release safeguards
-- [x] BigQuery source access and seven-table smoke test
-- [x] Actual source schema and fixed analysis window
-- [x] Monthly KPI SQL, CSV, and trend chart
-- [x] M+1-to-M+12 cohort-retention SQL, CSV, and heatmap
-- [ ] Customer segments and channel/category retention decomposition
-- [ ] Experiment design and decision dashboard
-- [x] Reproducibility review and final one-page brief
+4번은 데이터는 존재하나 분석이 아직 구현되지 않았습니다.
+5번은 캠페인·처치 필드가 없어 현재 데이터로 인과 효과를 산출할 수 없습니다.
+판정 근거는 [비즈니스 문제 정의](docs/business_problem.md)에 있습니다.
 
-## Reproduction
+---
 
-The source connection can be checked with:
+## 데이터 출처와 고지
 
-```powershell
-.venv\Scripts\python.exe src\smoke.py
+출처는 `bigquery-public-data.thelook_ecommerce`이며 프로젝트 범위의
+Application Default Credentials로 조회했습니다.
+주문 125,158건, 사용자 100,000명, 상품 원가, 반품 상태, 유입채널 5종,
+행동 이벤트 2,424,927건을 포함합니다.
+
+**theLook은 공개 합성 데이터이며 실제 기업의 데이터나 성과가 아닙니다.**
+캠페인·처치 필드가 없으므로 이 단계에서는 캠페인 효과나 인과적 사업 영향을
+보고하지 않습니다. 원본 데이터 파일, 인증정보, 고객명, 이메일, 주소는
+저장소에 포함하지 않습니다.
+
+---
+
+## 데이터 한계
+
+이 데이터로 할 수 없는 것을 먼저 밝힙니다.
+
+- 가입에서 첫 구매까지 소요일이 왜곡되어 있습니다. P10 28일, 중앙값 385일, P90 1,439일.
+- 코호트 리텐션에 감쇠가 없어 절대값 기반 액션 타이밍을 산출할 수 없습니다.
+- 할인 품목이 0/180,066으로 할인 민감 세그먼트를 측정할 수 없습니다.
+- 월별 마진율이 51.4~52.2%로 사실상 고정되어 있어 계절성·프로모션 효과를 분석할 수 없습니다.
+- 미래 시점의 주문 품목과 이벤트가 각각 1,197건 존재해 `as_of_date=2026-08-07`로 고정했습니다.
+
+정량화된 한계 전문, 타임스탬프 이상, 절단 정책, 매출 대사 결과는
+[데이터 한계와 해석 규칙](docs/limitations.md)에 있습니다.
+
+---
+
+## 진행 상태
+
+- [x] 저장소 구조와 공개 위생 정비
+- [x] BigQuery 소스 접근과 7개 테이블 스모크 테스트
+- [x] 실제 스키마 확보와 분석 구간 확정
+- [x] 월별 KPI SQL·CSV·추세 차트
+- [x] M+1~M+12 코호트 리텐션 SQL·CSV·히트맵
+- [x] 지표 정의 사전과 개인정보 처리 원칙
+- [x] 인증 없이 실행되는 산출물 검증 테스트 15종
+- [ ] 고객 세그먼트와 채널·카테고리 리텐션 분해
+- [ ] 실험 설계와 의사결정 대시보드
+
+---
+
+## 재현 방법
+
+### 1. 환경 준비
+
+Windows
+
+```
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
 ```
 
-The two reviewed queries are:
+macOS / Linux
 
-- [`sql/analysis/01_monthly_kpi.sql`](sql/analysis/01_monthly_kpi.sql)
-- [`sql/analysis/02_repeat_rate.sql`](sql/analysis/02_repeat_rate.sql)
+```
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
 
-Their committed outputs are:
+### 2. 인증 없이 산출물 검증
 
-- [`reports/preview/01_monthly_kpi.csv`](reports/preview/01_monthly_kpi.csv)
-- [`reports/preview/02_cohort_retention.csv`](reports/preview/02_cohort_retention.csv)
-- [`reports/plan_onepager_public.pdf`](reports/plan_onepager_public.pdf)
+GCP 계정 없이 커밋된 CSV·차트·PDF·문서의 정합성을 검증합니다.
+스키마, 절단 셀 수, 마진율 파생 관계, 주문 합계, 문서 링크를 검사합니다.
 
-Both queries use `2023-08-01` through `2026-08-07`, run with BigQuery Standard SQL, and were executed twice with matching SHA-256 output hashes.
+```
+python tests/test_offline.py
+```
 
-## Technology stack
+```
+offline verification - 15 checks
+passed=15 failed=0
+```
 
-### In use
+### 3. 원본 데이터부터 재실행 (선택)
 
-- **Python** for source access, deterministic execution, and artifact verification
-- **BigQuery** for the public theLook dataset and query execution
-- **SQL** for monthly KPI and cohort-retention definitions
-- **pandas** for tabular result handling and CSV export
-- **Matplotlib** for the two committed preview charts
+BigQuery 접근 권한이 있는 경우에만 필요합니다.
 
-### Planned work
+```
+gcloud auth application-default login
+set GOOGLE_CLOUD_PROJECT=<본인 GCP 프로젝트 ID>
+python src/smoke.py
+```
 
-- Customer segmentation and funnel analysis
-- Experiment design and predictive modeling
-- Decision dashboard and final reporting
+### 검토 대상 쿼리와 결과
 
-Code and documentation use the [MIT License](LICENSE). Source datasets remain subject to their providers' separate terms.
+- [`sql/analysis/01_monthly_kpi.sql`](sql/analysis/01_monthly_kpi.sql) → [`reports/preview/01_monthly_kpi.csv`](reports/preview/01_monthly_kpi.csv)
+- [`sql/analysis/02_repeat_rate.sql`](sql/analysis/02_repeat_rate.sql) → [`reports/preview/02_cohort_retention.csv`](reports/preview/02_cohort_retention.csv)
+
+두 쿼리 모두 2023-08-01부터 2026-08-07 구간을 BigQuery Standard SQL로 실행하며,
+2회 실행 결과의 SHA-256이 일치함을 확인했습니다.
+
+---
+
+## 기술 스택
+
+### 실제 사용 중
+
+- **Python** — 소스 접근, 결정적 실행, 산출물 검증
+- **BigQuery** — theLook 공개 데이터셋 조회와 dry-run 비용 관리
+- **SQL** — 월별 KPI와 코호트 리텐션 정의
+- **pandas** — 결과 처리와 CSV 출력
+- **Matplotlib** — 커밋된 미리보기 차트 2종
+- **pytest** — 인증 없이 실행되는 산출물 검증 15종
+
+### 예정
+
+- 고객 세그먼트와 퍼널 분석
+- 실험 설계와 예측 모델
+- 의사결정 대시보드와 정기 리포트
+
+---
+
+코드와 문서는 [MIT License](LICENSE)를 따릅니다.
+원본 데이터셋은 각 제공자의 별도 약관을 따릅니다.

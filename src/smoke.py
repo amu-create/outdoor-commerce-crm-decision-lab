@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -29,8 +30,16 @@ def load_config() -> dict[str, Any]:
         raise TypeError("config/source.yaml must contain a mapping")
     if config.get("source") != "thelook":
         raise ValueError(f"Unsupported selected source: {config.get('source')!r}")
-    if config.get("project_id") != "occl-analytics-2026":
-        raise ValueError(f"Unexpected project_id: {config.get('project_id')!r}")
+    # 프로젝트 ID는 실행자마다 다르다. 환경변수 > config 순으로 해석한다.
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT") or config.get("project_id")
+    if not project_id:
+        raise SystemExit(
+            "GCP 프로젝트 ID를 찾을 수 없습니다.\n"
+            "  환경변수 GOOGLE_CLOUD_PROJECT 를 설정하거나\n"
+            "  config/source.yaml 의 project_id 를 지정하세요.\n"
+            "  BigQuery 없이 산출물만 확인하려면: python tests/test_offline.py"
+        )
+    config["project_id"] = project_id
     if config.get("dataset") != "bigquery-public-data.thelook_ecommerce":
         raise ValueError(f"Unexpected dataset: {config.get('dataset')!r}")
     tables = config.get("tables")
