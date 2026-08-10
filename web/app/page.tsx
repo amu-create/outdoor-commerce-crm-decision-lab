@@ -66,7 +66,7 @@ export default function Home() {
             </div>
             <div className="hero-visual">
               <ContourField series={contours.series} />
-              <div className="contour-note"><strong>24개 paired cohorts</strong><span>M+1 1.9684% → M+12 1.8353%</span></div>
+              <div className="contour-note"><strong>24개 paired cohorts</strong><span>M+1 {content.retention.m1} → M+12 {content.retention.m12}</span></div>
             </div>
             <p className="disclosure"><span>SYNTHETIC DATA</span>{content.hero.disclosure}</p>
           </section>

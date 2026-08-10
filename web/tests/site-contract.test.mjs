@@ -22,6 +22,7 @@ const publicFiles = [
   "public/artifacts/cohort-retention.png",
   "public/artifacts/plan-onepager-public.pdf",
 ];
+const approvedStack = ["Python", "BigQuery", "SQL", "pandas", "Matplotlib"];
 
 function absolute(relativePath) {
   return new URL(relativePath, WEB_ROOT);
@@ -33,6 +34,15 @@ function walk(directory) {
     if (["node_modules", ".next", "out"].includes(entry.name)) return [];
     return entry.isDirectory() ? walk(path) : [path];
   });
+}
+
+function collectStrings(value) {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(collectStrings);
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap(collectStrings);
+  }
+  return [];
 }
 
 test("공개 콘텐츠는 검증된 핵심 수치를 동일 모집단 기준으로 유지한다", () => {
@@ -47,13 +57,67 @@ test("공개 콘텐츠는 검증된 핵심 수치를 동일 모집단 기준으�
     "19개",
   ]);
   assert.equal(content.retention.pairedCohorts, 24);
-  assert.equal(content.retention.m1, "1.9684%");
-  assert.equal(content.retention.m12, "1.8353%");
-  assert.equal(content.retention.delta, "0.1331%p");
+  assert.equal(content.retention.m1, "2.0%");
+  assert.equal(content.retention.m12, "1.8%");
+  assert.equal(content.retention.delta, "약 0.1%p");
+  assert.equal(content.retention.range, "1.7%~2.0%");
   assert.equal(content.monthly.netRevenueDelta, "+30.1%");
   assert.equal(content.monthly.orderDelta, "+29.6%");
   assert.equal(content.monthly.aovDelta, "+0.4%");
 
+});
+
+test("공개 기술 스택은 승인된 5종만 표시하고 검사 근거는 별도로 제공한다", () => {
+  const content = JSON.parse(
+    readFileSync(absolute("content/site-content.json"), "utf8"),
+  );
+  const publicStrings = collectStrings(content);
+  const forbiddenTools = /\b(?:pytest|dbt|Jupyter|dagster|airflow)\b/gi;
+
+  assert.deepEqual(content.hero.stack, approvedStack);
+  assert.deepEqual(publicStrings.join(" ").match(forbiddenTools) ?? [], []);
+  assert.equal(
+    publicStrings.includes("오프라인 정합성 검사 19개 통과"),
+    true,
+  );
+});
+
+test("공개 표시 문자열에는 소수점 셋째 자리 이상이 없다", () => {
+  const content = JSON.parse(
+    readFileSync(absolute("content/site-content.json"), "utf8"),
+  );
+  const publicStrings = collectStrings(content);
+  const overPrecise = publicStrings.flatMap(
+    (value) => value.match(/\d+\.\d{3,}/g) ?? [],
+  );
+
+  assert.deepEqual(overPrecise, []);
+});
+
+test("공개 비율은 소수 첫째 자리까지만 표시한다", () => {
+  const content = JSON.parse(
+    readFileSync(absolute("content/site-content.json"), "utf8"),
+  );
+  const publicStrings = collectStrings(content);
+  const overPreciseRates = publicStrings.flatMap(
+    (value) => value.match(/\d+\.\d{2,}(?=%p?)/g) ?? [],
+  );
+
+  assert.deepEqual(overPreciseRates, []);
+});
+
+test("공개 금액은 소수점 없이 천 단위로 표시한다", () => {
+  const content = JSON.parse(
+    readFileSync(absolute("content/site-content.json"), "utf8"),
+  );
+  const publicStrings = collectStrings(content);
+
+  assert.equal(
+    publicStrings.some((value) =>
+      value.includes("순매출 6,248,326, 총매출 8,324,326"),
+    ),
+    true,
+  );
 });
 
 test("히어로 등고선은 완전 관측된 24개 코호트의 12개월 실측값을 사용한다", () => {
