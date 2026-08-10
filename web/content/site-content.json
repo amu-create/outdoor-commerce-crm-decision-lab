@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "title": "Outdoor Commerce CRM Decision Lab",
+    "description": "공개 패션 커머스 데이터로 CRM 의사결정을 재현하고 데이터가 답하지 못하는 영역까지 검증한 Executive Case Study"
+  },
+  "repository": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab",
+  "hero": {
+    "eyebrow": "EXECUTIVE CASE STUDY / 2026-08-07",
+    "title": "Outdoor Commerce CRM Decision Lab",
+    "definition": "공개 패션 커머스 데이터로 CRM 의사결정을 재현하고, 데이터가 답하지 못하는 영역까지 검증했습니다.",
+    "application": "Prepared for Youngone Outdoor Data Scientist Application",
+    "disclosure": "영원아웃도어 데이터사이언티스트 지원을 위해 준비한 공개 분석 프로젝트입니다. 제휴·소속 관계가 없으며, theLook 합성 데이터를 사용했습니다.",
+    "stack": ["Python", "BigQuery", "SQL", "pandas", "Matplotlib", "pytest · 19 checks"],
+    "actions": [
+      {
+        "label": "GitHub에서 SQL 보기",
+        "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab/tree/main/sql/analysis"
+      },
+      {
+        "label": "1쪽 수행계획서 보기",
+        "href": "/artifacts/plan-onepager-public.pdf"
+      }
+    ]
+  },
+  "evidence": [
+    { "value": "125,158건", "label": "원본 주문", "detail": "전체 소스 스냅샷" },
+    { "value": "96,277건", "label": "분석 구간 주문", "detail": "2023-08-01~2026-08-07" },
+    { "value": "72,268건", "label": "유효 주문", "detail": "취소·반품 제외" },
+    { "value": "19개", "label": "오프라인 검사", "detail": "2회 연속 통과" }
+  ],
+  "summary": [
+    {
+      "index": "01",
+      "title": "매출 증가는 주문량이 주도",
+      "observation": "2026년 7월 순매출은 전월 대비 +30.1%, 주문수는 +29.6%, AOV는 +0.4%였습니다.",
+      "decision": "객단가 개선보다 주문 밀도 변화가 설명력이 크며, 합성 데이터 생성 특성과 분리해 해석합니다."
+    },
+    {
+      "index": "02",
+      "title": "일반적인 리텐션 감쇠가 없음",
+      "observation": "동일 관측기간 24개 코호트에서 M+1 1.9684% → M+12 1.8353%, 감소폭은 0.1331%p입니다.",
+      "decision": "절대 리텐션을 CRM 발송 시점으로 사용하지 않고 데이터 품질 판정 근거로만 유지합니다."
+    },
+    {
+      "index": "03",
+      "title": "분석 비중을 검증 가능한 축으로 이동",
+      "observation": "유입채널 5종과 이벤트 6종은 있지만 집계 SQL은 0개이며, 할인 품목도 0/180,066개입니다.",
+      "decision": "검증되지 않은 세그먼트 대신 마진·채널·반품·퍼널의 측정 체계부터 설계합니다."
+    }
+  ],
+  "monthly": {
+    "netRevenueDelta": "+30.1%",
+    "orderDelta": "+29.6%",
+    "aovDelta": "+0.4%",
+    "partialMonth": "2026-08은 7일 중 마지막 날 00:42까지만 관측된 부분월입니다.",
+    "imageAlt": "2023년 8월부터 2026년 8월까지 월별 순매출과 상품 원가 기준 마진율. 2026년 8월은 7일까지의 부분월로 표시됨"
+  },
+  "retention": {
+    "pairedCohorts": 24,
+    "m1": "1.9684%",
+    "m12": "1.8353%",
+    "delta": "0.1331%p",
+    "range": "1.6709%~2.0328%",
+    "imageAlt": "37개 첫 구매 코호트의 M+1부터 M+12 재구매율 히트맵. 관측이 끝나지 않은 90개 셀은 회색 절단 구간으로 표시됨"
+  },
+  "realityChecks": [
+    ["리텐션 감쇠", "24개 동일 패널에서 1.9684% → 1.8353%", "운영 직접 사용 불가", "절대 타이밍 제안 제외"],
+    ["할인 민감도", "할인 품목 0/180,066개", "산출 불가", "할인 변수 확보 후 재설계"],
+    ["상품 원가 마진", "37개월 51.4354%~52.1916%, 표준편차 약 0.16%p", "단면 비교만 가능", "영업이익 표현 제외"],
+    ["반품·취소", "96,277건 중 24,009건 제외, 유효 주문 72,268건", "가능", "상태별 손실 분해"],
+    ["유입채널", "채널 5종·이벤트 6종, 현재 집계 SQL 0개", "현재 불가", "채널·퍼널 집계 추가"],
+    ["미래 레코드", "기준일 이후 주문 0건, 품목·이벤트 각 1,197건", "조건부 가능", "주문 시각을 권위 기준으로 고정"],
+    ["부분월", "2026-08은 7개 날짜·3,683건, 마지막 관측 00:42", "추세 비교 불가", "완전월 비교와 외삽 제외"],
+    ["합성 데이터", "주문 125,158건·사용자 100,000명", "방법론 검증만 가능", "실제 기업 성과로 해석 금지"]
+  ],
+  "businessQuestions": [
+    {
+      "question": "월별 순매출 증가는 주문수와 AOV 중 무엇이 주도하는가?",
+      "status": "답변 가능",
+      "evidence": "2026-07 순매출 +30.1%, 주문수 +29.6%, AOV +0.4%로 주문량 영향이 더 큽니다.",
+      "next": "2026-08 부분월을 제외하고 완전월 추세를 유지합니다."
+    },
+    {
+      "question": "첫 구매 코호트별 M+1~M+12 재구매 차이는 무엇인가?",
+      "status": "부분 가능",
+      "evidence": "37개 코호트·444셀 중 90셀은 절단됐고, 동일 관측기간 24개 코호트는 0.1331%p만 감소했습니다.",
+      "next": "절대 타이밍과 캘린더 코호트 순위는 운영 근거에서 제외합니다."
+    },
+    {
+      "question": "취소·반품 제외 순매출과 상품 원가 마진은 얼마인가?",
+      "status": "답변 가능",
+      "evidence": "순매출 6,248,326.46, 총매출 8,324,326.45이며 24,009건이 유효 주문에서 제외됐습니다.",
+      "next": "채널·카테고리별 상품 원가 마진으로 분해합니다."
+    },
+    {
+      "question": "유입채널과 퍼널 단계별 이탈은 어디에서 발생하는가?",
+      "status": "현재 불가",
+      "evidence": "채널 5종과 이벤트 유형 6종은 존재하지만 집계 SQL과 결과 파일은 각각 0개입니다.",
+      "next": "채널·퍼널 기준과 검증 가능한 집계 SQL을 먼저 만듭니다."
+    },
+    {
+      "question": "어떤 고객군을 CRM 액션 대상으로 우선해야 하는가?",
+      "status": "현재 불가",
+      "evidence": "세그먼트 산출물은 0개이며 할인 품목도 0/180,066개라 할인 민감군 분류가 성립하지 않습니다.",
+      "next": "재구매·마진·카테고리·반품 기준의 관측 세그먼트부터 검증합니다."
+    }
+  ],
+  "evidenceLinks": [
+    { "label": "월별 KPI 산출 SQL 확인", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab/blob/main/sql/analysis/01_monthly_kpi.sql" },
+    { "label": "코호트 리텐션 산출 SQL 확인", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab/blob/main/sql/analysis/02_repeat_rate.sql" },
+    { "label": "7개 핵심 지표 정의 확인", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab/blob/main/docs/metric_dictionary.md" },
+    { "label": "22개 데이터 한계와 해석 규칙 확인", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab/blob/main/docs/limitations.md" },
+    { "label": "공개 집계와 개인정보 원칙 확인", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab/blob/main/docs/data_privacy.md" },
+    { "label": "공개 1쪽 수행계획서 열기", "href": "/artifacts/plan-onepager-public.pdf" },
+    { "label": "전체 분석 저장소 검토", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab" }
+  ],
+  "applicationPlan": [
+    { "day": "30일", "title": "관측 기준 확립", "items": ["지표사전", "데이터 품질 검사", "기준 CRM 리포트"] },
+    { "day": "60일", "title": "측정 체계 확장", "items": ["캠페인 측정 체계", "코호트 분석", "세그먼트 분석"] },
+    { "day": "90일", "title": "실행 체계 정착", "items": ["실험 템플릿", "고객 타기팅", "월간 자동 보고서"] }
+  ],
+  "finalActions": [
+    { "label": "GitHub 저장소 보기", "href": "https://github.com/amu-create/outdoor-commerce-crm-decision-lab" },
+    { "label": "공개 수행계획서 열기", "href": "/artifacts/plan-onepager-public.pdf" }
+  ]
+}

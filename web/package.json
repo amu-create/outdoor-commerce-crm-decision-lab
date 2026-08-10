@@ -1,0 +1,28 @@
+{
+  "name": "outdoor-commerce-crm-decision-lab-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "sync:artifacts": "node scripts/sync-artifacts.mjs",
+    "predev": "npm run sync:artifacts",
+    "prebuild": "npm run sync:artifacts",
+    "pretest": "npm run sync:artifacts",
+    "build": "next build",
+    "lint": "eslint .",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.2",
+    "eslint-config-next": "16.3.0",
+    "typescript": "5.9.3"
+  }
+}

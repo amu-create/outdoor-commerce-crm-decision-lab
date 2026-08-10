@@ -1,0 +1,93 @@
+.shell {
+  display: grid;
+  grid-template-columns: 144px minmax(0, 1fr);
+  width: min(100%, calc(var(--content-width) + 144px));
+  margin: 0 auto;
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 16px 24px;
+  border-right: 1px solid var(--contour);
+  background: var(--surface);
+  z-index: 10;
+  font-size: 12px;
+}
+.rail-mark { color: var(--moss); font-weight: 600; letter-spacing: 0.14em; }
+.rail nav { display: grid; gap: 8px; }
+.rail nav a { display: grid; grid-template-columns: 22px 1fr; gap: 7px; padding: 9px 0; color: var(--ink-dim); }
+.rail nav a:hover { color: var(--ink); }
+.rail nav span { color: var(--slate-blue); }
+.rail-freshness { display: grid; gap: 2px; color: var(--ink-dim); }
+.rail-freshness time { color: var(--ink); }
+
+main { min-width: 0; }
+.hero, .section, .final-cta { padding-inline: clamp(24px, 4vw, 56px); }
+.hero {
+  position: relative;
+  min-height: min(760px, 100vh);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+  align-items: center;
+  padding-block: 88px 42px;
+  border-bottom: 1px solid var(--contour);
+  overflow: hidden;
+}
+.hero-copy { grid-column: 1 / span 7; position: relative; z-index: 2; }
+.hero-visual { position: absolute; inset: 36px 0 86px 38%; opacity: 0.9; }
+.disclosure { grid-column: 1 / -1; align-self: end; margin: 48px 0 0; padding: 12px 16px; border: 1px solid var(--marker); background: var(--surface); color: var(--ink-dim); font-size: 14px; position: relative; z-index: 2; }
+.disclosure span { color: var(--marker); margin-right: 14px; font-family: var(--font-data), monospace; }
+
+.section { padding-block: 84px; border-bottom: 1px solid var(--contour); scroll-margin-top: 24px; }
+.section-heading { display: grid; grid-template-columns: 1fr auto; gap: 6px 24px; align-items: end; margin-bottom: 32px; }
+.section-heading p { grid-column: 1 / -1; margin: 0; color: var(--moss); font-size: 12px; letter-spacing: 0.12em; }
+.section-heading h2 { margin: 0; }
+.section-heading > span { color: var(--ink-dim); font-size: 12px; }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.evidence-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 16px 0 0; }
+.chart-section { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 24px; }
+.chart-section .section-heading { grid-column: 1 / -1; }
+.chart-frame { grid-column: 1 / span 8; }
+.reasoning-grid { grid-column: 9 / -1; }
+.evidence-plan { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+.plan-grid { display: grid; gap: 16px; }
+.mobile-header { display: none; }
+
+@media (max-width: 900px) {
+  .shell { display: block; }
+  .rail { display: none; }
+  .mobile-header { position: sticky; top: 0; z-index: 30; display: grid; gap: 8px; padding: 10px 20px; border-bottom: 1px solid var(--contour); background: var(--surface); font-size: 12px; }
+  .mobile-header > span { color: var(--moss); }
+  .mobile-header nav { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--ink-dim); }
+  .hero { min-height: auto; padding-block: 72px 30px; }
+  .hero-copy { grid-column: 1 / -1; }
+  .hero-visual { inset: 20px -160px 96px 32%; opacity: 0.46; }
+  .summary-grid { grid-template-columns: 1fr; }
+  .evidence-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chart-frame, .reasoning-grid { grid-column: 1 / -1; }
+  .reasoning-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+  .evidence-plan { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .hero, .section, .final-cta { padding-inline: 20px; }
+  .hero { padding-top: 52px; }
+  .hero-visual { inset: 40px -250px 180px 22%; opacity: 0.34; }
+  .hero-definition { font-size: 16px; }
+  .application-note { font-size: 12px; }
+  .hero-actions { display: grid; }
+  .disclosure { font-size: 12px; }
+  .disclosure span { display: block; margin: 0 0 4px; }
+  .section { padding-block: 64px; }
+  .section-heading { display: block; }
+  .section-heading h2 { margin: 8px 0; }
+  .evidence-strip { grid-template-columns: 1fr 1fr; }
+  .reasoning-grid { grid-template-columns: 1fr; }
+}

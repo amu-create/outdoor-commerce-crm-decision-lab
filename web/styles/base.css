@@ -1,0 +1,77 @@
+:root {
+  --surface: #12161A;
+  --surface-2: #1A2027;
+  --surface-3: #232B33;
+  --contour: #2E3A42;
+  --ink: #E8EDF0;
+  --ink-dim: #8A9BA5;
+  --moss: #7A9A6B;
+  --slate-blue: #5B8AA6;
+  --marker: #E2703A;
+  --alert: #C4453A;
+  --content-width: 1280px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--surface); }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body), Pretendard, "Noto Sans KR", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--marker); outline-offset: 4px; }
+::selection { background: var(--moss); color: var(--surface); }
+
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 {
+  font-family: var(--font-display), Archivo, "Arial Narrow", sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+h1 { font-size: clamp(40px, 6vw, 64px); }
+h2 { font-size: clamp(28px, 4vw, 40px); }
+h3 { font-size: 20px; }
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -80px;
+  z-index: 100;
+  padding: 12px 16px;
+  background: var(--marker);
+  color: var(--surface);
+  font-weight: 700;
+}
+.skip-link:focus { top: 16px; }
+
+.eyebrow,
+.section-heading p,
+.section-heading > span,
+.rail,
+.mobile-header,
+.summary-index,
+.question-number,
+.status,
+.stack-list,
+.evidence-strip,
+.reasoning-grid span,
+.plan-grid > article > span,
+.final-cta small,
+.contour-note,
+table {
+  font-family: var(--font-data), "IBM Plex Mono", Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
